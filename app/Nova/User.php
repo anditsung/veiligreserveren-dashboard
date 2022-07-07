@@ -9,6 +9,8 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Fields\Image;
+use League\Flysystem\AwsS3V3\PortableVisibilityConverter;
 
 class User extends Resource
 {
@@ -44,13 +46,13 @@ class User extends Resource
     public function fields(NovaRequest $request)
     {
         return [
-            ID::make('u_id')->sortable(),
+            ID::make('Id','u_id')->sortable(),
 
-            // Gravatar::make()->maxWidth(50),
+            Text::make('Username' , 'u_username')
+            ->sortable()
+            ->rules('required', 'max:255'),
 
-            // Text::make('Name')
-            //     ->sortable()
-            //     ->rules('required', 'max:255'),
+            Image::make('Email')->disableDownload()->disk('s3'),
 
             // Text::make('Email')
             //     ->sortable()
