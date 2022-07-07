@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "25c31c206c20b30dc475e6124a0be41e",
+    "content-hash": "59e7e245944ce744bc740e81032a1edd",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -1055,6 +1055,66 @@
                 }
             ],
             "time": "2022-06-18T20:57:19+00:00"
+        },
+        {
+            "name": "eminiarts/nova-tabs",
+            "version": "2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eminiarts/nova-tabs.git",
+                "reference": "bcc616863e20522099488285915141b51741c5eb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eminiarts/nova-tabs/zipball/bcc616863e20522099488285915141b51741c5eb",
+                "reference": "bcc616863e20522099488285915141b51741c5eb",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "laravel/nova": "^4.0",
+                "php": "^7.4|^8"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2",
+                "orchestra/testbench": "^6",
+                "roave/security-advisories": "dev-latest"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Eminiarts\\Tabs\\TabsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Eminiarts\\Tabs\\": "src/",
+                    "Eminiarts\\Tabs\\Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Emini Arts GmbH",
+                    "email": "support@eminiarts.ch",
+                    "homepage": "https://eminiarts.ch"
+                }
+            ],
+            "description": "Laravel Nova - Tabs.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "support": {
+                "issues": "https://github.com/eminiarts/nova-tabs/issues",
+                "source": "https://github.com/eminiarts/nova-tabs/tree/2.1.0"
+            },
+            "time": "2022-06-28T12:57:16+00:00"
         },
         {
             "name": "fruitcake/php-cors",
