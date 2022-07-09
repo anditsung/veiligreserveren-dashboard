@@ -11,7 +11,7 @@ class Organisation extends Model
 
     protected $primaryKey = 'org_id';
 
-        /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -41,4 +41,11 @@ class Organisation extends Model
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * Get the comments for the blog post.
+     */
+    public function users()
+    {
+        return $this->hasMany(User::class, 'u_orgid', 'org_id');
+    }
 }

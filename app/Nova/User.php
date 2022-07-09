@@ -10,6 +10,9 @@ use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\Image;
+use Laravel\Nova\Fields\BelongsToMany;
+use Illuminate\Support\Facades\Log;
+
 use League\Flysystem\AwsS3V3\PortableVisibilityConverter;
 
 class User extends Resource
@@ -24,7 +27,7 @@ class User extends Resource
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
-        return $query->where('u_id', $request->user()->u_id);
+        // return $query->where('u_id', $request->user()->u_id);
     }
 
     /**
@@ -58,14 +61,24 @@ class User extends Resource
      */
     public function fields(NovaRequest $request)
     {
+        Log::debug($request);
         return [
+
+
             ID::make('Id','u_id')->sortable(),
 
             Text::make('Username' , 'u_username')
             ->sortable()
-            ->rules('required', 'max:255'),
+            ->rules('required', 'max:255')
+            ->showOnPreview(),
 
-            Image::make('Email')->disableDownload()->disk('s3'),
+            // HasOne::make('Organisation')->onlyOnIndex            ,
+            // Text::make('Name', function () {
+            //     return $this->organisation()->org_id;
+            // })
+
+
+            // Image::make('Email')->disableDownload()->disk('s3'),
 
             // Text::make('Email')
             //     ->sortable()

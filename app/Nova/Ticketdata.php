@@ -5,14 +5,13 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\BelongsToMany;
-use Illuminate\Support\Facades\Log;
+use Laravel\Nova\Fields\Currency;
+use Laravel\Nova\Fields\Boolean;
 
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class Organisation extends Resource
+class Ticketdata extends Resource
 {
-
     /**
      * Build an "index" query for the given resource.
      *
@@ -20,17 +19,17 @@ class Organisation extends Resource
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    // public static function indexQuery(NovaRequest $request, $query)
-    // {
-    //     return $query->where('org_orgid', $request->user()->u_orgid);
-    // }
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        return $query->where('t_orgid', $request->user()->u_orgid);
+    }
 
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\Organisation::class;
+    public static $model = \App\Models\Ticketdata::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -56,10 +55,12 @@ class Organisation extends Resource
      */
     public function fields(NovaRequest $request)
     {
-        Log::debug($request);
         return [
-            ID::make("Id","org_id")->sortable(),
-            Text::make("Naam", "org_naam")->sortable(),
+            Text::make('Naam', 't_username')->sortable(),
+            Text::make('Email', 't_useremail')->sortable(),
+            Text::make('Bundelnummer', 't_bundelnr')->sortable(),
+            Text::make('Ticetnummer', 't_ticketnr')->sortable(),
+            Boolean::make('Scannend', 't_scanned')->sortable(),
         ];
     }
 
