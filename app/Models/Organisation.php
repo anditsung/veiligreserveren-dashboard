@@ -46,6 +46,6 @@ class Organisation extends Model
      */
     public function users()
     {
-        return $this->hasMany(User::class, 'u_orgid', 'org_id');
+        return $this->hasMany(User::class, 'u_orgid', 'org_orgid');
     }
 }

@@ -5,7 +5,7 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\BelongsToMany;
+use Laravel\Nova\Fields\HasMany;
 use Illuminate\Support\Facades\Log;
 
 use Laravel\Nova\Http\Requests\NovaRequest;
@@ -60,6 +60,12 @@ class Organisation extends Resource
         return [
             ID::make("Id","org_id")->sortable(),
             Text::make("Naam", "org_naam")->sortable(),
+
+            Text::make("Users", function() {
+                return $this->users->count();
+            })->sortable(),
+
+            HasMany::make('users')
         ];
     }
 

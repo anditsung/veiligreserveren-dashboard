@@ -7,6 +7,7 @@ use Illuminate\Validation\Rules;
 use Laravel\Nova\Fields\Gravatar;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Password;
+use Laravel\Nova\Fields\PasswordConfirmation;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\Image;
@@ -61,16 +62,26 @@ class User extends Resource
      */
     public function fields(NovaRequest $request)
     {
-        Log::debug($request);
         return [
-
-
-            ID::make('Id','u_id')->sortable(),
-
             Text::make('Username' , 'u_username')
             ->sortable()
             ->rules('required', 'max:255')
             ->showOnPreview(),
+
+            Text::make("organisatie", function () {
+                return $this->organisations->org_naam;
+            })->sortable(),
+
+            Text::make("Email", "u_emailadres")->sortable(),
+            Text::make("Login Email", "email")->sortable(),
+
+            Password::make('Password', "u_sleutel")
+                ->onlyOnForms()
+                ->creationRules('required', Rules\Password::defaults(), 'confirmed')
+                ->updateRules('nullable', Rules\Password::defaults(), 'confirmed'),
+
+            PasswordConfirmation::make('Password Confirmation'),
+
 
             // HasOne::make('Organisation')->onlyOnIndex            ,
             // Text::make('Name', function () {

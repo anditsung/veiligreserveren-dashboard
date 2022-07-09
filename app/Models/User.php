@@ -47,5 +47,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-
+    /**
+     * Get the comments for the blog post.
+     */
+    public function organisations()
+    {
+        return $this->hasOne(Organisation::class, 'org_orgid', 'u_orgid');
+    }
 }
