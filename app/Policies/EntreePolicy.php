@@ -28,4 +28,14 @@ class EntreePolicy
     {
         return true;
     }
+
+    public function delete(User $user, $model)
+    {
+        return true;
+    }
+
+    public function replicate(User $user)
+    {
+        return false;
+    }
 }

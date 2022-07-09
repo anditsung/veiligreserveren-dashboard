@@ -7,6 +7,7 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Actions\ExportAsCsv;
 
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -105,6 +106,8 @@ class Ticketdata extends Resource
      */
     public function actions(NovaRequest $request)
     {
-        return [];
+        return [
+            ExportAsCsv::make(),
+        ];
     }
 }

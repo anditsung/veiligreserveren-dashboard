@@ -9,6 +9,18 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 class Entree extends Resource
 {
     /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        return $query->where('entree_orgid', $request->user()->u_orgid);
+    }
+
+    /**
      * The model the resource corresponds to.
      *
      * @var string
