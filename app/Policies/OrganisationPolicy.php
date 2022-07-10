@@ -21,7 +21,11 @@ class OrganisationPolicy
  
     public function create(User $user)
     {
-        return true;
+        if($user->role == 'admin' || $user->u_orgid == null) {
+            return true;
+        } else {
+            return false;
+        }
     }
  
     public function update(User $user, $model)
@@ -31,7 +35,7 @@ class OrganisationPolicy
 
     public function delete(User $user, $model)
     {
-        return true;
+        return false;
     }
 
     public function replicate(User $user)

@@ -13,6 +13,8 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\BelongsToMany;
 use Illuminate\Support\Facades\Log;
+use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\Hidden;
 
 use League\Flysystem\AwsS3V3\PortableVisibilityConverter;
 
@@ -28,7 +30,11 @@ class User extends Resource
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
-        // return $query->where('u_id', $request->user()->u_id);
+        if($request->user()->role == 'admin') {
+            return $query;
+        } else {
+            return $query->where('u_orgid', $request->user()->u_orgid);
+        }
     }
 
     /**
@@ -69,25 +75,31 @@ class User extends Resource
             ->showOnPreview(),
 
             Text::make("organisatie", function () {
-                return $this->organisations->org_naam;
+                if(isset($this->organisations->org_naam)) {
+                    return $this->organisations->org_naam;
+                }
+
+                return "organisatie niet gevonden";
             })->sortable(),
 
             Text::make("Email", "u_emailadres")->sortable(),
             Text::make("Login Email", "email")->sortable(),
 
-            Password::make('Password', "u_sleutel")
-                ->onlyOnForms()
-                ->creationRules('required', Rules\Password::defaults(), 'confirmed')
-                ->updateRules('nullable', Rules\Password::defaults(), 'confirmed'),
+            Password::make('Password', "password")
+                ->onlyOnForms(),
+            // ->creationRules('required', Rules\Password::defaults(), 'confirmed')
+            // ->updateRules('nullable', Rules\Password::defaults(), 'confirmed'),
 
-            PasswordConfirmation::make('Password Confirmation'),
+            PasswordConfirmation::make('Password Confirmation', "password"),
 
+            Select::make('Role', 'role')->options([
+                'organisator' => 'Organisator',
+                'vrijwilleger' => 'Vrijwilleger',
+            ]),
 
-            // HasOne::make('Organisation')->onlyOnIndex            ,
-            // Text::make('Name', function () {
-            //     return $this->organisation()->org_id;
-            // })
-
+            Hidden::make('OrgID', 'u_orgid')->default(function ($request) {
+                return $request->user()->u_orgid;
+            })
 
             // Image::make('Email')->disableDownload()->disk('s3'),
 

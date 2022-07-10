@@ -3,7 +3,9 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Text;
+
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Entree extends Resource
@@ -17,7 +19,11 @@ class Entree extends Resource
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
-        return $query->where('entree_orgid', $request->user()->u_orgid);
+        if($request->user()->role == 'admin') {
+            return $query;
+        } else {
+            return $query->where('entree_orgid', $request->user()->u_orgid);
+        }
     }
 
     /**
@@ -52,7 +58,15 @@ class Entree extends Resource
     public function fields(NovaRequest $request)
     {
         return [
-            ID::make("Id", "entree_id")->sortable(),
+            Text::make("Titel", "entree_title")->sortable(),
+
+            Boolean::make('Enabled', 'entree_enabled')
+                ->trueValue('Y')
+                ->falseValue('N'),
+
+            Text::make("Event", function(){
+                return $this->events->event_name;
+            })
         ];
     }
 
@@ -75,7 +89,9 @@ class Entree extends Resource
      */
     public function filters(NovaRequest $request)
     {
-        return [];
+        return [
+            new Filters\EntreeType,
+        ];
     }
 
     /**

@@ -22,7 +22,11 @@ class Ticketdata extends Resource
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
-        return $query->where('t_orgid', $request->user()->u_orgid);
+        if($request->user()->role == 'admin') {
+            return $query;
+        } else {
+            return $query->where('t_orgid', $request->user()->u_orgid);
+        }
     }
 
     /**

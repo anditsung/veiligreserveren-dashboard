@@ -20,10 +20,14 @@ class Organisation extends Resource
      * @param  \Illuminate\Database\Eloquent\Builder  $query
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    // public static function indexQuery(NovaRequest $request, $query)
-    // {
-    //     return $query->where('org_orgid', $request->user()->u_orgid);
-    // }
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        if($request->user()->role == 'admin') {
+            return $query;
+        } else {
+            return $query->where('org_orgid', $request->user()->u_orgid);
+        }
+    }
 
     /**
      * The model the resource corresponds to.
@@ -44,9 +48,12 @@ class Organisation extends Resource
      *
      * @var array
      */
-    public static $search = [
-        'id',
-    ];
+    public static $search = [];
+
+    public static function searchable()
+    {
+        return false;
+    }
 
     /**
      * Get the fields displayed by the resource.
@@ -56,9 +63,7 @@ class Organisation extends Resource
      */
     public function fields(NovaRequest $request)
     {
-        Log::debug($request);
         return [
-            ID::make("Id","org_id")->sortable(),
             Text::make("Naam", "org_naam")->sortable(),
 
             Text::make("Users", function() {

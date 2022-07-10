@@ -11,4 +11,12 @@ class Entree extends Model
 
     protected $primaryKey = 'entree_id';
 
+    /**
+     * Get the comments for the blog post.
+     */
+    public function events()
+    {
+        return $this->hasOne(Event::class, 'event_id', 'entree_eventid');
+    }
+
 }

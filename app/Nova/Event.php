@@ -19,7 +19,11 @@ class Event extends Resource
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
-        return $query->where('event_orgid', $request->user()->u_orgid);
+        if($request->user()->role == 'admin') {
+            return $query;
+        } else {
+            return $query->where('event_orgid', $request->user()->u_orgid);
+        }
     }
 
     /**
@@ -54,7 +58,6 @@ class Event extends Resource
     public function fields(NovaRequest $request)
     {
         return [
-            ID::make("Id", "event_id")->sortable(),
             Text::make("Event Name", "event_name")->sortable(),
             Trix::make("Event Description", "event_description")->sortable(),
 
