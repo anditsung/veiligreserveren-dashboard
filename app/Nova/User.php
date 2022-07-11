@@ -69,7 +69,7 @@ class User extends Resource
     public function fields(NovaRequest $request)
     {
         return [
-            Text::make('Username' , 'u_username')
+            Text::make('Username' , 'u_realname')
             ->sortable()
             ->rules('required', 'max:255')
             ->showOnPreview(),

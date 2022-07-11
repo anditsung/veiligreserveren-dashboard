@@ -48,4 +48,12 @@ class Organisation extends Model
     {
         return $this->hasMany(User::class, 'u_orgid', 'org_orgid');
     }
+
+    /**
+     * Get the comments for the blog post.
+     */
+    public function events()
+    {
+        return $this->hasMany(Event::class, 'event_orgid', 'org_orgid');
+    }
 }

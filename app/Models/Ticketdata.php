@@ -11,5 +11,13 @@ class Ticketdata extends Model
 
     protected $primaryKey = 't_id';
     protected $table = 'ticketdata';
+
+    /**
+    * Get the comments for the blog post.
+    */
+    public function entrees()
+    {
+        return $this->hasOne(Entree::class, 'entree_id', 't_entreeid');
+    }
     
 }

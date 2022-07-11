@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
+use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Event extends Resource
@@ -60,6 +61,8 @@ class Event extends Resource
         return [
             Text::make("Event Name", "event_name")->sortable(),
             Trix::make("Event Description", "event_description")->sortable(),
+
+            HasMany::make("Entrees","entrees"),
 
         ];
     }

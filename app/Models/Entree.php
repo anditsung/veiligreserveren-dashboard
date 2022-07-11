@@ -19,4 +19,12 @@ class Entree extends Model
         return $this->hasOne(Event::class, 'event_id', 'entree_eventid');
     }
 
+    /**
+     * Get the comments for the blog post.
+     */
+    public function ticketdatas()
+    {
+        return $this->HasMany(Ticketdata::class, 't_entreeid', 'entree_id');
+    }
+
 }

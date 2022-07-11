@@ -5,6 +5,7 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\HasMany;
 
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -66,7 +67,9 @@ class Entree extends Resource
 
             Text::make("Event", function(){
                 return $this->events->event_name;
-            })
+            }),
+
+            HasMany::make("Ticketdatas", "ticketdatas"),
         ];
     }
 

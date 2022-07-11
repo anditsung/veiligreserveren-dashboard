@@ -65,6 +65,11 @@ class Ticketdata extends Resource
             Text::make('Email', 't_useremail')->sortable(),
             Text::make('Bundelnummer', 't_bundelnr')->sortable(),
             Text::make('Ticetnummer', 't_ticketnr')->sortable(),
+
+            Text::make('Event Titel', function(){
+                return $this->entrees->entree_title;
+            }),
+
             Boolean::make('Scannend', 't_scanned')->sortable(),
         ];
     }
@@ -88,7 +93,9 @@ class Ticketdata extends Resource
      */
     public function filters(NovaRequest $request)
     {
-        return [];
+        return [
+            new Filters\TicketdataType,
+        ];
     }
 
     /**

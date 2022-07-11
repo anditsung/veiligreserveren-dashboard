@@ -7,11 +7,15 @@ use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\HasMany;
 use Illuminate\Support\Facades\Log;
+use Eminiarts\Tabs\Traits\HasTabs;
+use Eminiarts\Tabs\Tabs;
+use Eminiarts\Tabs\Tab;
 
 use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Organisation extends Resource
 {
+    use HasTabs;
 
     /**
      * Build an "index" query for the given resource.
@@ -64,14 +68,18 @@ class Organisation extends Resource
     public function fields(NovaRequest $request)
     {
         return [
-            Text::make("Naam", "org_naam")->sortable(),
-
-            Text::make("Users", function() {
-                return $this->users->count();
-            })->sortable(),
-
-            HasMany::make('users')
-        ];
+            Tabs::make('Naam', [
+               Tab::make('Naam', [
+                   Text::make('Naam', 'org_naam'),
+               ]),
+               Tab::make('adres', [
+                   Text::make('Adres', 'org_adres')
+               ]),
+                Tab::make('Gebruikers', [
+                    HasMany::make('users'),
+                ]),
+            ]),
+         ];
     }
 
     /**
