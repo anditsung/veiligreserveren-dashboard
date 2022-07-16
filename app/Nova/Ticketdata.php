@@ -49,7 +49,7 @@ class Ticketdata extends Resource
      * @var array
      */
     public static $search = [
-        'id',
+        't_username', 't_useremail'
     ];
 
     /**

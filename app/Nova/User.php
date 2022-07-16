@@ -2,25 +2,18 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rules;
-use Laravel\Nova\Fields\Gravatar;
-use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Password;
 use Laravel\Nova\Fields\PasswordConfirmation;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Laravel\Nova\Fields\Image;
-use Laravel\Nova\Fields\BelongsToMany;
-use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Hidden;
+use Illuminate\Validation\Rules;
 
-use League\Flysystem\AwsS3V3\PortableVisibilityConverter;
+// use Illuminate\Validation\Rules;
 
 class User extends Resource
 {
-
     /**
      * Build an "index" query for the given resource.
      *
@@ -30,7 +23,7 @@ class User extends Resource
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
-        if($request->user()->role == 'admin') {
+        if ($request->user()->role == 'admin') {
             return $query;
         } else {
             return $query->where('u_orgid', $request->user()->u_orgid);
@@ -49,7 +42,7 @@ class User extends Resource
      *
      * @var string
      */
-    public static $title = 'u_id';
+    public static $title = 'email';
 
     /**
      * The columns that should be searched.
@@ -57,7 +50,7 @@ class User extends Resource
      * @var array
      */
     public static $search = [
-        // 'id', 'name', 'email',
+        'email', 'u_emailadres'
     ];
 
     /**
@@ -69,50 +62,60 @@ class User extends Resource
     public function fields(NovaRequest $request)
     {
         return [
-            Text::make('Username' , 'u_realname')
-            ->sortable()
-            ->rules('required', 'max:255')
-            ->showOnPreview(),
+            Text::make('Gebruikersnaam', 'u_username')
+                ->sortable()
+                ->rules('required', 'max:255')
+                ->showOnPreview(),
+
+            Text::make('Naam', 'u_realname')
+                ->sortable()
+                ->rules('required', 'max:255')
+                ->showOnPreview(),
 
             Text::make("organisatie", function () {
-                if(isset($this->organisations->org_naam)) {
+                if (isset($this->organisations->org_naam)) {
                     return $this->organisations->org_naam;
                 }
-
                 return "organisatie niet gevonden";
             })->sortable(),
 
-            Text::make("Email", "u_emailadres")->sortable(),
-            Text::make("Login Email", "email")->sortable(),
+            Text::make("Email", "email")
+                ->hideFromIndex()
+                ->rules('required', 'email', 'max:100')
+                ->creationRules('unique:users')
+                ->sortable(),
 
             Password::make('Password', "password")
-                ->onlyOnForms(),
-            // ->creationRules('required', Rules\Password::defaults(), 'confirmed')
-            // ->updateRules('nullable', Rules\Password::defaults(), 'confirmed'),
+                ->onlyOnForms()
+                ->creationRules('required', 'string', 'min:6')
+                ->updateRules('nullable', 'string', 'min:6'),
 
-            PasswordConfirmation::make('Password Confirmation', "password"),
+            PasswordConfirmation::make('Password Confirmation')
+                ->onlyOnForms()
+                ->rules('required_with:password', 'same:password'),
 
-            Select::make('Role', 'role')->options([
-                'organisator' => 'Organisator',
-                'vrijwilleger' => 'Vrijwilleger',
-            ]),
+            Select::make('Geslacht', 'u_sexe')->options([
+                'man' => 'Man',
+                'vrouw' => 'Vrouw',
+                '-' => '-',
+            ])->withMeta(['value' => '-'])
+                ->hideFromIndex(),
+
+            Hidden::make('Role', 'role')->default(function () {
+                return 'organisator';
+            }),
 
             Hidden::make('OrgID', 'u_orgid')->default(function ($request) {
                 return $request->user()->u_orgid;
-            })
+            }),
 
-            // Image::make('Email')->disableDownload()->disk('s3'),
+            Hidden::make('OrgID', 'u_rights')->default(function () {
+                return "a:2:{s:9:'dashboard';s:1:'Y';s:7:'scannen';s:1:'Y';}";
+            }),
 
-            // Text::make('Email')
-            //     ->sortable()
-            //     ->rules('required', 'email', 'max:254')
-            //     ->creationRules('unique:users,email')
-            //     ->updateRules('unique:users,email,{{resourceId}}'),
-
-            // Password::make('Password')
-            //     ->onlyOnForms()
-            //     ->creationRules('required', Rules\Password::defaults())
-            //     ->updateRules('nullable', Rules\Password::defaults()),
+            Hidden::make('OrgID', 'u_scantype')->default(function () {
+                return "administrator";
+            }),
         ];
     }
 

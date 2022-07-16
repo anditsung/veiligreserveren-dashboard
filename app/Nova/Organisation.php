@@ -6,16 +6,20 @@ use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\HasMany;
+use Laravel\Nova\Fields\Image;
 use Illuminate\Support\Facades\Log;
-use Eminiarts\Tabs\Traits\HasTabs;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Eminiarts\Tabs\Tabs;
 use Eminiarts\Tabs\Tab;
-
-use Laravel\Nova\Http\Requests\NovaRequest;
+use Eminiarts\Tabs\Traits\HasTabs;
+use Eminiarts\Tabs\Traits\HasActionsInTabs; // Add this Trait
+use Illuminate\Support\Facades\Storage;
+use Laravel\Nova\Panel;
 
 class Organisation extends Resource
 {
     use HasTabs;
+    use HasActionsInTabs;
 
     /**
      * Build an "index" query for the given resource.
@@ -26,7 +30,7 @@ class Organisation extends Resource
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
-        if($request->user()->role == 'admin') {
+        if ($request->user()->role == 'admin') {
             return $query;
         } else {
             return $query->where('org_orgid', $request->user()->u_orgid);
@@ -68,18 +72,52 @@ class Organisation extends Resource
     public function fields(NovaRequest $request)
     {
         return [
-            Tabs::make('Naam', [
-               Tab::make('Naam', [
-                   Text::make('Naam', 'org_naam'),
-               ]),
-               Tab::make('adres', [
-                   Text::make('Adres', 'org_adres')
-               ]),
+            Tabs::make('Organisatie Instellingen', [
+                Tab::make('Gegevens organisatie', [
+                    Text::make('Organisatie', 'org_naam'),
+                    Text::make('Adres', 'org_adres'),
+                    Text::make('Postcode', 'org_postcode'),
+                    Text::make('Plaats', 'org_plaats'),
+
+                    Text::make('Email', 'org_emailadres'),
+                    Text::make('Website', 'org_website'),
+
+                    Text::make('IBAN', 'org_iban')->hideFromIndex(),
+                    Text::make('KVK', 'org_kvknr')->hideFromIndex(),
+                    Text::make('BTW', 'org_btwnr')->hideFromIndex(),
+
+                    Image::make('Logo', 'org_logo')
+                        ->disk('s3')
+                        ->disableDownload(),
+                ]),
+                Tab::make('Facturatie', [
+                    Text::make('Adres', 'org_adres')
+                    // Naam
+                    // Ter attentie van	
+                    // Adres
+                    // Postcode	
+                    // Plaats
+                    // Emailadres
+                ]),
+                Tab::make('Ticketshop instellingen', [
+                    Text::make('Adres', 'org_adres')
+                    // Toon print service
+                    // Niet printen melding
+                    // Mail aankoopfactuur-link	
+                ]),
+                Tab::make('Mollie PSP', [
+                    Text::make('Adres', 'org_adres')
+                    // PSP	
+                    // PSP website
+                    // Merchant ID	
+                    // Status
+                    // Betaalmethodes
+                ]),
                 Tab::make('Gebruikers', [
                     HasMany::make('users'),
                 ]),
-            ]),
-         ];
+            ])->withToolbar(),
+        ];
     }
 
     /**
