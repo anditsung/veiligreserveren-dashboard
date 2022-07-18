@@ -13,8 +13,7 @@ use Eminiarts\Tabs\Tabs;
 use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Traits\HasTabs;
 use Eminiarts\Tabs\Traits\HasActionsInTabs; // Add this Trait
-use Illuminate\Support\Facades\Storage;
-use Laravel\Nova\Panel;
+use Ctessier\NovaAdvancedImageField\AdvancedImage; // Add this Trait
 
 class Organisation extends Resource
 {
@@ -86,9 +85,12 @@ class Organisation extends Resource
                     Text::make('KVK', 'org_kvknr')->hideFromIndex(),
                     Text::make('BTW', 'org_btwnr')->hideFromIndex(),
 
-                    Image::make('Logo', 'org_logo')
-                        ->disk('s3')
-                        ->disableDownload(),
+                    // Image::make('Logo', 'org_logo')
+                    //     ->disk('s3')
+                    //     ->disableDownload(),
+
+                    AdvancedImage::make('Logo', 'org_logo')->disk('s3')->croppable(3 / 3)->disableDownload()->deletable(false),
+
                 ]),
                 Tab::make('Facturatie', [
                     Text::make('Adres', 'org_adres')

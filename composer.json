@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "ctessier/nova-advanced-image-field": "2.x",
         "doctrine/dbal": "^3.3",
         "eminiarts/nova-tabs": "^2.1",
         "guzzlehttp/guzzle": "^7.2",
