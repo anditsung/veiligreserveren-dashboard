@@ -20,7 +20,7 @@ class Event extends Resource
      */
     public static function indexQuery(NovaRequest $request, $query)
     {
-        if($request->user()->role == 'admin') {
+        if ($request->user()->role == 'admin') {
             return $query;
         } else {
             return $query->where('event_orgid', $request->user()->u_orgid);
@@ -39,7 +39,7 @@ class Event extends Resource
      *
      * @var string
      */
-    public static $title = 'id';
+    public static $title = 'event_name';
 
     /**
      * The columns that should be searched.
@@ -47,7 +47,7 @@ class Event extends Resource
      * @var array
      */
     public static $search = [
-        'id',
+        'event_name',
     ];
 
     /**
@@ -62,7 +62,7 @@ class Event extends Resource
             Text::make("Event Name", "event_name")->sortable(),
             Trix::make("Event Description", "event_description")->sortable(),
 
-            HasMany::make("Entrees","entrees"),
+            HasMany::make("Entrees", "entrees"),
 
         ];
     }

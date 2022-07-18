@@ -4,12 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Organisation extends Model
 {
     use HasFactory;
 
     protected $primaryKey = 'org_id';
+
+    /**
+     * Get the user's org_paymethodes.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+
+    protected function orgPaymethodes(): Attribute
+    {
+        $rand = rand(0, 200);
+
+        return Attribute::make(
+            set: fn ($value) => strtoupper($value . $rand),
+        );
+    }
 
     /**
      * The attributes that are mass assignable.

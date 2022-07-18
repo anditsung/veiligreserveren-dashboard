@@ -3,17 +3,18 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
-use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\Image;
+use Laravel\Nova\Fields\Boolean;
 use Illuminate\Support\Facades\Log;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Eminiarts\Tabs\Tabs;
 use Eminiarts\Tabs\Tab;
 use Eminiarts\Tabs\Traits\HasTabs;
 use Eminiarts\Tabs\Traits\HasActionsInTabs; // Add this Trait
-use Ctessier\NovaAdvancedImageField\AdvancedImage; // Add this Trait
+use Marshmallow\AdvancedImage\AdvancedImage;
+use Outl1ne\MultiselectField\Multiselect;
 
 class Organisation extends Resource
 {
@@ -85,35 +86,51 @@ class Organisation extends Resource
                     Text::make('KVK', 'org_kvknr')->hideFromIndex(),
                     Text::make('BTW', 'org_btwnr')->hideFromIndex(),
 
-                    // Image::make('Logo', 'org_logo')
-                    //     ->disk('s3')
-                    //     ->disableDownload(),
-
-                    AdvancedImage::make('Logo', 'org_logo')->disk('s3')->croppable(3 / 3)->disableDownload()->deletable(false),
-
+                    AdvancedImage::make('Logo', 'org_logo')->disk('s3')->croppable()->disableDownload()->deletable(false),
                 ]),
                 Tab::make('Facturatie', [
-                    Text::make('Adres', 'org_adres')
-                    // Naam
-                    // Ter attentie van	
-                    // Adres
-                    // Postcode	
-                    // Plaats
-                    // Emailadres
+                    Text::make('Naam', 'org_factnaam'),
+                    Text::make('Ter attentie van', 'org_facttav'),
+                    Text::make('Adres', 'org_factadres'),
+                    Text::make('Postcode', 'org_factpostcode'),
+                    Text::make('Plaats', 'org_factplaats'),
+                    Text::make('Emailadres', 'org_factemailadres')->help('PS: ontvangt op dit adres onze maandelijkse digitale factuur (PDF)'),
                 ]),
                 Tab::make('Ticketshop instellingen', [
-                    Text::make('Adres', 'org_adres')
-                    // Toon print service
-                    // Niet printen melding
-                    // Mail aankoopfactuur-link	
+                    Boolean::make('Toon print service', 'org_onlinefact')
+                        ->trueValue('Y')
+                        ->falseValue('N'),
+
+                    Boolean::make('Niet printen melding', 'org_printservice')->help('(tbv barcodes scannen vanaf smartphones)')
+                        ->trueValue('Y')
+                        ->falseValue('N'),
+
+                    Boolean::make('Mail aankoopfactuur-link', 'org_dontprintnote')
+                        ->trueValue('Y')
+                        ->falseValue('N'),
                 ]),
                 Tab::make('Mollie PSP', [
-                    Text::make('Adres', 'org_adres')
-                    // PSP	
-                    // PSP website
-                    // Merchant ID	
-                    // Status
-                    // Betaalmethodes
+                    Text::make('PSP', function () {
+                        return "Mollie";
+                    }),
+
+                    Text::make('PSP website', function () {
+                        return "<a style='color: blue;' href='https://www.mollie.com/nl'>www.mollie.com<a>";
+                    })->asHtml(),
+
+                    Text::make('Live API-key', 'org_mollielive'),
+                    Text::make('Test API-key', 'org_mollietest'),
+
+                    Select::make('Status', 'org_paystatus')->options([
+                        'live' => 'Live',
+                        'test' => 'Test',
+                    ]),
+
+                    Multiselect::make('Betaalmethodes', 'org_paymethodes')
+                        ->options([
+                            'liverpool' => 'Liverpool FC',
+                            'tottenham' => 'Tottenham Hotspur',
+                        ])
                 ]),
                 Tab::make('Gebruikers', [
                     HasMany::make('users'),
