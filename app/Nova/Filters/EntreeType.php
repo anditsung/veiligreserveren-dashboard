@@ -36,8 +36,8 @@ class EntreeType extends Filter
      * @return array
      */
     public function options(NovaRequest $request)
-    {     
-        if($request->user()->role === 'admin') {
+    {
+        if ($request->user()->role === 'admin') {
             return Event::all()->mapWithKeys(fn ($item) => [$item->event_name => $item->event_id])->toArray();
         } else {
             $event = Event::where('event_orgid', $request->user()->u_orgid)->get();
