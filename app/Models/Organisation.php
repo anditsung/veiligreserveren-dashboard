@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Facades\Log;
 
 class Organisation extends Model
 {
@@ -20,10 +21,9 @@ class Organisation extends Model
 
     protected function orgPaymethodes(): Attribute
     {
-        $rand = rand(0, 200);
-
         return Attribute::make(
-            set: fn ($value) => strtoupper($value . $rand),
+            get: fn ($value) => explode(',', $value), // "a,b,c" => ["a", "b", "c"]
+            set: fn ($value) => implode(',', json_decode($value)), // ["a", "b", "c"] => "a,b,c"
         );
     }
 
@@ -35,7 +35,8 @@ class Organisation extends Model
     protected $fillable = [
         'email',
         'password',
-        'u_username'
+        'u_username',
+        'org_paymethodes'
     ];
 
     /**
@@ -55,6 +56,7 @@ class Organisation extends Model
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'org_paymethodes' => 'string',
     ];
 
     /**

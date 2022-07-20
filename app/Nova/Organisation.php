@@ -38,6 +38,36 @@ class Organisation extends Resource
     }
 
     /**
+     * Build a "detail" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function detailQuery(NovaRequest $request, $query)
+    {
+        ////////////////////////////////////////////////////////////
+        $mollie = new \Mollie\Api\MollieApiClient();
+        $mollie->setApiKey("test_qNQvK877QFxW5trDJjM9A8WFaywyVt");
+
+        $methods = $mollie->methods->allActive();
+
+        $methods_array = [];
+        foreach ($methods as $method) {
+            array_push($methods_array, $method->description);
+        }
+
+        $detail = $query->first();
+
+        $detail->org_paymethodes = json_encode($methods_array);
+
+        $detail->save();
+        ////////////////////////////////////////////////////////////
+
+        return parent::detailQuery($request, $query);
+    }
+
+    /**
      * The model the resource corresponds to.
      *
      * @var string
@@ -126,11 +156,18 @@ class Organisation extends Resource
                         'test' => 'Test',
                     ]),
 
-                    Multiselect::make('Betaalmethodes', 'org_paymethodes')
-                        ->options([
-                            'liverpool' => 'Liverpool FC',
-                            'tottenham' => 'Tottenham Hotspur',
-                        ])
+                    Multiselect::make('Betaalmethodes', 'org_paymethodes')->options([
+                        "ideal" => "Ideal",
+                        "creditcard" => "Creditcard",
+                        "paypal" => "Paypal",
+                        'giropay' => "Giropay",
+                    ]),
+
+                    // Get the payment methods database inside mollie.
+
+                    // Multiselect::make('Betaalmethodes', 'org_paymethodes')->options(function () {
+                    //     return array_combine($this->org_paymethodes, $this->org_paymethodes);
+                    // })->readonly(),
                 ]),
                 Tab::make('Gebruikers', [
                     HasMany::make('users'),
