@@ -2,10 +2,11 @@
 
 namespace App\Nova;
 
-use Illuminate\Http\Request;
-use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Hidden;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Trix;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\HasMany;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
@@ -62,8 +63,44 @@ class Event extends Resource
             Text::make("Event Name", "event_name")->sortable(),
             Trix::make("Event Description", "event_description")->sortable(),
 
-            HasMany::make("Entrees", "entrees"),
+            Boolean::make("Enabled in shop", "event_visibleinshop")
+                ->trueValue('Y')
+                ->falseValue('N')
+                ->sortable(),
 
+            Boolean::make("Visible on site", "event_visibleonsite")
+                ->trueValue('Y')
+                ->falseValue('N')
+                ->sortable(),
+
+            Boolean::make("Enabled", "event_enabled")
+                ->trueValue('Y')
+                ->falseValue('N')
+                ->sortable(),
+
+            Select::make('Type', 'event_type')->options([
+                'concert' => 'Concert',
+                'conferentie' => 'Conferentie',
+                'evenement' => 'Evenement',
+                'fair' => 'Fair',
+                'festival' => 'Festival',
+                'film' => 'Film',
+                'onderwijs' => 'Onderwijs',
+                'party' => 'Party',
+                'seminar' => 'Seminar',
+                'show' => 'Show',
+                'sport' => 'Sport',
+                'theater' => 'Theater',
+                'workshop' => 'Workshop',
+            ]),
+
+            Text::make('Genre', 'event_genre'),
+
+            Hidden::make('event_orgid', function () {
+                return auth()->user()->u_orgid;
+            }),
+
+            HasMany::make("Entrees", "entrees"),
         ];
     }
 

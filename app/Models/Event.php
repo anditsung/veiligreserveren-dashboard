@@ -18,5 +18,4 @@ class Event extends Model
     {
         return $this->hasMany(Entree::class, 'entree_orgid', 'event_orgid');
     }
-
 }

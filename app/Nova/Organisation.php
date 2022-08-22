@@ -123,7 +123,7 @@ class Organisation extends Resource
                     Text::make('KVK', 'org_kvknr')->hideFromIndex(),
                     Text::make('BTW', 'org_btwnr')->hideFromIndex(),
 
-                    AdvancedImage::make('Logo', 'org_logo')->disk('s3')->croppable()->disableDownload()->deletable(false),
+                    AdvancedImage::make('Logo', 'org_logo')->disk('s3')->croppable(16 / 9)->disableDownload()->deletable(false),
                 ]),
                 Tab::make('Facturatie', [
                     Text::make('Naam', 'org_factnaam')->hideFromIndex(),

@@ -2,7 +2,9 @@
     "private": true,
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build",
+        "build-custom-login": "cd nova-components/CustomLogin && npm run dev",
+        "build-custom-login-prod": "cd nova-components/CustomLogin && npm run prod"
     },
     "devDependencies": {
         "axios": "^0.25",
