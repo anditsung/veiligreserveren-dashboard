@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5be4a5af91eb18a13d7a11e0f73495ad",
+    "content-hash": "18a5717c304b81dfdfb74d15872c8836",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -6980,6 +6980,42 @@
                 }
             ],
             "time": "2022-03-08T17:03:00+00:00"
+        },
+        {
+            "name": "vr/custom-login",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "./nova-components/CustomLogin",
+                "reference": "c3b149193dee05c6f4d931949ed09014b704ab9c"
+            },
+            "require": {
+                "php": "^7.3|^8.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Vr\\CustomLogin\\ToolServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Vr\\CustomLogin\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "A Laravel Nova tool.",
+            "keywords": [
+                "laravel",
+                "nova"
+            ],
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "webmozart/assert",

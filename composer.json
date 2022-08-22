@@ -20,7 +20,8 @@
         "marshmallow/nova-advanced-image": "^2.0",
         "mollie/laravel-mollie": "^2.0",
         "mollie/mollie-api-php": "^2.0",
-        "outl1ne/nova-multiselect-field": "^4.0"
+        "outl1ne/nova-multiselect-field": "^4.0",
+        "vr/custom-login": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -73,6 +74,10 @@
         "nova": {
             "type": "composer",
             "url": "https://nova.laravel.com"
+        },
+        "0": {
+            "type": "path",
+            "url": "./nova-components/CustomLogin"
         }
     }
 }
