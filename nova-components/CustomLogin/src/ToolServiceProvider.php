@@ -53,6 +53,6 @@ class ToolServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(NovaLoginController::class, Http\Controllers\LoginController::class);
+
     }
 }
